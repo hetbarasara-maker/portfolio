@@ -1,73 +1,66 @@
-# Welcome to your Lovable project
+# Cosmic Pixel Pad | Het Barasara Portfolio
 
-## Project info
+A premium, state-of-the-art developer portfolio built with a focus on high-fidelity animations, responsiveness, and a modern "Cosmic" aesthetic.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+![Portfolio Preview](https://github.com/hetbarasara-maker/cosmic-pixel-pad/raw/main/public/preview.png)
 
-## How can I edit this code?
+## 🚀 Key Features
 
-There are several ways of editing your application.
+- **3D Orbit Hero**: An interactive 3D orbit system showcasing the core tech stack.
+- **Dynamic Themes**: Support for Light/Dark modes with multiple accent colors (Purple, Blue, Green, Orange).
+- **Infinite Starfield**: A high-performance 3D starfield background using Three.js and React Three Fiber.
+- **Real-time Analytics**: Integrated LeetCode and GitHub contribution stats.
+- **Responsive Design**: Mobile-first architecture with custom `clamp()` typography and liquid layouts.
+- **Modern Tech Stack**: Built using React 18, TypeScript, Tailwind CSS, and Framer Motion.
 
-**Use Lovable**
+## 🛠️ Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Core**: [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **3D Engine**: [Three.js](https://threejs.org/) & [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/) & [Lucide Icons](https://lucide.dev/)
+- **State Management**: [TanStack Query](https://tanstack.com/query)
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📦 Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v18 or higher)
+- npm or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/hetbarasara-maker/cosmic-pixel-pad.git
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🎨 Folder Structure
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```text
+src/
+├── assets/         # Static assets and images
+├── components/     # Reusable UI components
+├── hooks/          # Custom React hooks
+├── pages/          # Page layouts (Index, NotFound)
+└── index.css       # Global styles and Tailwind layers
 ```
 
-**Edit a file directly in GitHub**
+## 📄 License
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Built with ❤️ by [Het Barasara](https://linkedin.com/in/het-barasara)
