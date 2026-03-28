@@ -99,7 +99,7 @@ export default function Navbar() {
           <div className="w-[1px] h-4 bg-white/10 mx-1" />
           {[
             { icon: Github, href: "https://github.com/hetbarasara-maker" },
-            { icon: Linkedin, href: "https://linkedin.com/in/het-barasara" },
+            { icon: Linkedin, href: "https://www.linkedin.com/in/het-barasara-12a331383" },
           ].map(({ icon: Icon, href }, i) => (
             <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors duration-300">
               <Icon size={18} />
@@ -138,7 +138,7 @@ export default function Navbar() {
               ))}
               <div className="flex gap-6 px-3 pt-4 pb-2 border-t border-foreground/[0.05] mt-2">
                 <a href="https://github.com/hetbarasara-maker" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors"><Github size={20} /></a>
-                <a href="https://linkedin.com/in/het-barasara" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin size={20} /></a>
+                <a href="https://www.linkedin.com/in/het-barasara-12a331383" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors"><Linkedin size={20} /></a>
               </div>
             </div>
           </motion.div>

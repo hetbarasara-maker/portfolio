@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import SectionWrapper from "./SectionWrapper";
-import { Send, Mail, Github, Linkedin } from "lucide-react";
+import { Send, Mail, Github, Linkedin, Youtube } from "lucide-react";
 import { useState, FormEvent } from "react";
 
 export default function ContactSection() {
@@ -31,6 +31,12 @@ export default function ContactSection() {
     }
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    // You can add a toast notification here if you have one
+    alert("Email copied to clipboard!");
+  };
+
   return (
     <SectionWrapper id="contact" title="Contact" subtitle="Let's work together" className="!pb-8 sm:!pb-12">
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -56,7 +62,7 @@ export default function ContactSection() {
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 className="w-full bg-secondary/50 border border-foreground/[0.08] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none transition-shadow duration-300"
                 style={{ boxShadow: "none" }}
-                onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px hsl(263 90% 66% / 0.3)")}
+                onFocus={(e) => (e.target.style.boxShadow = `0 0 0 2px hsl(var(--primary) / 0.3)`)}
                 onBlur={(e) => (e.target.style.boxShadow = "none")}
               />
             </div>
@@ -70,7 +76,7 @@ export default function ContactSection() {
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               className="w-full bg-secondary/50 border border-foreground/[0.08] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-none transition-shadow duration-300"
-              onFocus={(e) => (e.target.style.boxShadow = "0 0 0 2px hsl(263 90% 66% / 0.3)")}
+              onFocus={(e) => (e.target.style.boxShadow = `0 0 0 2px hsl(var(--primary) / 0.3)`)}
               onBlur={(e) => (e.target.style.boxShadow = "none")}
             />
           </div>
@@ -114,11 +120,28 @@ export default function ContactSection() {
           </p>
           <div className="space-y-4">
             {[
-              { icon: Mail, label: "het.barasara.cg@gmail.com", href: "mailto:het.barasara.cg@gmail.com" },
+              {
+                icon: Mail,
+                label: "het.barasara.cg@gmail.com",
+                href: "mailto:het.barasara.cg@gmail.com",
+                onClick: (e: any) => {
+                  e.preventDefault();
+                  copyToClipboard("het.barasara.cg@gmail.com");
+                  window.location.href = "mailto:het.barasara.cg@gmail.com";
+                }
+              },
               { icon: Github, label: "github.com/hetbarasara-maker", href: "https://github.com/hetbarasara-maker" },
-              { icon: Linkedin, label: "linkedin.com/in/het-barasara", href: "https://linkedin.com/in/het-barasara-12a331383" },
-            ].map(({ icon: Icon, label, href }) => (
-              <a key={label} href={href} className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors duration-300 text-xs sm:text-sm justify-center md:justify-start">
+              { icon: Linkedin, label: "linkedin.com/in/het-barasara", href: "https://www.linkedin.com/in/het-barasara-12a331383" },
+              { icon: Youtube, label: "@HetBarasara1", href: "https://www.youtube.com/@HetBarasara1" },
+            ].map(({ icon: Icon, label, href, onClick }) => (
+              <a
+                key={label}
+                href={href}
+                onClick={onClick}
+                target={href.startsWith('mailto:') ? undefined : "_blank"}
+                rel={href.startsWith('mailto:') ? undefined : "noopener noreferrer"}
+                className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors duration-300 text-xs sm:text-sm justify-center md:justify-start"
+              >
                 <Icon size={16} className="sm:size-[18px] shrink-0" />
                 <span className="truncate">{label}</span>
               </a>
