@@ -4,15 +4,25 @@ import { ExternalLink, Github, Youtube } from "lucide-react";
 import fintrackImg from "@/assets/fintrack.png";
 
 import cafeHeavenImg from "@/assets/cafe-heaven.png";
+import mutualFundImg from "@/assets/mutual-fund.png";
 
 const projects = [
   {
     title: "FinTrack",
     desc: "A comprehensive personal finance tracker that helps you manage expenses, track savings, and visualize your financial health with interactive charts.",
     tech: ["TypeScript", "Next.js", "Tailwind CSS", "Prisma"],
-    image: fintrackImg, // Using the real dashboard screenshot
+    image: fintrackImg,
     live: "https://fin-track-ashen.vercel.app/auth/login",
     source: "https://github.com/hetbarasara-maker/FinTrack",
+    youtube: "#",
+  },
+  {
+    title: "Mutual Fund Explorer",
+    desc: "A powerful platform for discovering, comparing, and analyzing mutual funds. Features real-time fund performance tracking and systematic investment planning (SIP) insights.",
+    tech: ["React", "Tailwind CSS", "Vercel"],
+    image: mutualFundImg,
+    live: "https://mutual-fund-kappa.vercel.app/",
+    source: "https://github.com/hetbarasara-maker/mutual_fund",
     youtube: "#",
   },
   {
