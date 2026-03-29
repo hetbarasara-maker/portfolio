@@ -5,12 +5,13 @@ import fintrackImg from "@/assets/fintrack.png";
 
 import cafeHeavenImg from "@/assets/cafe-heaven.png";
 import mutualFundImg from "@/assets/mutual-fund.png";
+import woodcraftImg from "@/assets/woodcraft.png";
 
 const projects = [
   {
     title: "FinTrack",
     desc: "A comprehensive personal finance tracker that helps you manage expenses, track savings, and visualize your financial health with interactive charts.",
-    tech: ["TypeScript", "Next.js", "Tailwind CSS", "Prisma"],
+    tech: ["TypeScript", "Next.js", "Tailwind CSS", "Supabase"],
     image: fintrackImg,
     live: "https://fin-track-ashen.vercel.app/auth/login",
     source: "https://github.com/hetbarasara-maker/FinTrack",
@@ -35,19 +36,19 @@ const projects = [
     youtube: "#",
   },
   {
+    title: "WoodCraft Furniture",
+    desc: "A premium e-commerce platform for handcrafted furniture, featuring a sleek modern design, categorised browsing, and a seamless shopping experience.",
+    tech: ["HTML", "CSS", "JavaScript", "Netlify"],
+    image: woodcraftImg,
+    live: "https://woodcraftfurniture.netlify.app/",
+    source: "https://github.com/hetbarasara-maker/WoodCraft-furniture-",
+    youtube: "#",
+  },
+  {
     title: "Task Management App",
     desc: "Real-time collaborative task manager with drag-and-drop interface.",
     tech: ["Next.js", "PostgreSQL", "WebSocket"],
     image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&h=400&fit=crop",
-    live: "#",
-    source: "#",
-    youtube: "#",
-  },
-  {
-    title: "AI Chat Application",
-    desc: "Intelligent chatbot powered by OpenAI with context-aware responses.",
-    tech: ["React", "Python", "OpenAI", "FastAPI"],
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop",
     live: "#",
     source: "#",
     youtube: "#",

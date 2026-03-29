@@ -6,7 +6,7 @@ import profilePhoto from "@/assets/profile-photo.png";
 const highlights = [
   { icon: User, title: "Full Name", desc: "Het Barasara" },
   { icon: BookOpen, title: "Education", desc: "B.Tech in Information Technology" },
-  { icon: MapPin, title: "Location", desc: "Gujarat, India" },
+  { icon: MapPin, title: "Location", desc: "Ahmedabad, Gujarat, India" },
 ];
 
 export default function AboutSection() {
