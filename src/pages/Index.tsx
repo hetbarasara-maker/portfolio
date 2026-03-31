@@ -1,5 +1,6 @@
 import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
+import Preloader from "@/components/Preloader";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import EducationSection from "@/components/EducationSection";
@@ -12,6 +13,7 @@ import ContactSection from "@/components/ContactSection";
 const Index = () => {
   return (
     <>
+      <Preloader />
       <Starfield />
       <Navbar />
       <main className="overflow-x-hidden max-w-[100vw]">

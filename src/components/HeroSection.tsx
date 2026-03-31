@@ -64,7 +64,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.2, 0, 0, 1] }}
+          transition={{ duration: 0.8, delay: 3.2, ease: [0.2, 0, 0, 1] }}
           className="text-center lg:text-left z-20 pt-8 sm:pt-0"
         >
           <motion.span
@@ -123,9 +123,9 @@ export default function HeroSection() {
         {/* Right orbit visual */}
         <motion.div
           className="relative h-[280px] sm:h-[450px] flex items-center justify-center overflow-visible mt-4 sm:mt-8 lg:mt-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 3.5, ease: "easeOut" }}
         >
           {/* Orbit rings - adjusted sizes for mobile */}
           <div className="absolute w-[200px] h-[200px] sm:w-[400px] sm:h-[400px] rounded-full border border-foreground/[0.06]" />
