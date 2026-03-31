@@ -106,53 +106,69 @@ export default function LeetCodeSection() {
 
       setLoading(true);
       try {
-        const [solvedRes, contestRes, calendarRes, ghUserRes, ghReposRes] = await Promise.all([
-          fetch(`https://alfa-leetcode-api.onrender.com/Het_Barasara/solved`),
+        const [lcMainRes, contestRes, calendarRes, ghUserRes, ghReposRes] = await Promise.allSettled([
+          fetch(`https://leetcode-api-faisalshohag.vercel.app/Het_Barasara`),
           fetch(`https://alfa-leetcode-api.onrender.com/Het_Barasara/contest`),
           fetch(`https://alfa-leetcode-api.onrender.com/Het_Barasara/calendar`),
           fetch(`https://api.github.com/users/hetbarasara-maker`),
-          fetch(`https://api.github.com/users/hetbarasara-maker/repos`)
+          fetch(`https://api.github.com/users/hetbarasara-maker/repos?per_page=100`)
         ]);
 
-        if (!solvedRes.ok || !ghUserRes.ok) throw new Error("API error");
+        let solvedData: any = null;
+        let contestData: any = null;
+        let calendarData: any = null;
+        let ghUserData: any = null;
+        let ghReposData: any = null;
 
-        const solvedData = await solvedRes.json();
-        const contestData = await contestRes.json();
-        const calendarData = await calendarRes.json();
-        const ghUserData = await ghUserRes.json();
-        const ghReposData = await ghReposRes.json();
+        if (lcMainRes.status === 'fulfilled' && lcMainRes.value.ok) solvedData = await lcMainRes.value.json();
+        if (contestRes.status === 'fulfilled' && contestRes.value.ok) contestData = await contestRes.value.json();
+        if (calendarRes.status === 'fulfilled' && calendarRes.value.ok) calendarData = await calendarRes.value.json();
+        if (ghUserRes.status === 'fulfilled' && ghUserRes.value.ok) ghUserData = await ghUserRes.value.json();
+        if (ghReposRes.status === 'fulfilled' && ghReposRes.value.ok) ghReposData = await ghReposRes.value.json();
 
-        const newLc = {
-          solved: solvedData.solvedProblem ?? "167",
-          contestRating: contestData.contestRating ? Math.round(contestData.contestRating).toLocaleString() : "1,419",
-          easy: solvedData.easySolved ?? "94",
-          medium: solvedData.mediumSolved ?? "63",
-          hard: solvedData.hardSolved ?? "10",
-          streak: calendarData.streak ?? "70",
-          ranking: solvedData.ranking ?? "450,231",
-        };
+        setLcStats(prev => {
+          const newLc = {
+            solved: solvedData?.totalSolved ?? prev.solved,
+            contestRating: contestData?.contestRating ? Math.round(contestData.contestRating).toLocaleString() : prev.contestRating,
+            easy: solvedData?.easySolved ?? prev.easy,
+            medium: solvedData?.mediumSolved ?? prev.medium,
+            hard: solvedData?.hardSolved ?? prev.hard,
+            streak: calendarData?.streak ?? prev.streak,
+            ranking: solvedData?.ranking ?? prev.ranking,
+          };
 
-        const calObj = JSON.parse(calendarData.submissionCalendar || "{}");
-        setLcCalendar(calObj);
+          let calObj = null;
+          if (solvedData?.submissionCalendar && typeof solvedData.submissionCalendar === 'object') {
+            calObj = solvedData.submissionCalendar;
+          } else if (calendarData?.submissionCalendar) {
+            try { calObj = JSON.parse(calendarData.submissionCalendar); } catch (e) { }
+          }
 
-        const totalStars = Array.isArray(ghReposData)
-          ? ghReposData.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0)
-          : 0;
+          if (calObj) {
+            setLcCalendar(calObj);
+          }
+          localStorage.setItem(CACHE_KEY_LC, JSON.stringify({ stats: newLc, calendar: calObj || {}, timestamp: now }));
+          return newLc;
+        });
 
-        const newGh = {
-          repos: ghUserData.public_repos ?? "12",
-          followers: ghUserData.followers ?? "4",
-          following: ghUserData.following ?? "2",
-          stars: totalStars || 1,
-          gists: ghUserData.public_gists ?? "0",
-          year: ghUserData.created_at ? new Date(ghUserData.created_at).getFullYear() : "2025",
-          commits: "500+",
-        };
+        setGhStats(prev => {
+          const totalStars = Array.isArray(ghReposData)
+            ? ghReposData.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0)
+            : Number(prev.stars);
 
-        setLcStats(newLc);
-        setGhStats(newGh);
-        localStorage.setItem(CACHE_KEY_LC, JSON.stringify({ stats: newLc, calendar: calObj, timestamp: now }));
-        localStorage.setItem(CACHE_KEY_GH, JSON.stringify({ stats: newGh, timestamp: now }));
+          const newGh = {
+            repos: ghUserData?.public_repos ?? prev.repos,
+            followers: ghUserData?.followers ?? prev.followers,
+            following: ghUserData?.following ?? prev.following,
+            stars: Array.isArray(ghReposData) ? (totalStars || 1) : prev.stars,
+            gists: ghUserData?.public_gists ?? prev.gists,
+            year: ghUserData?.created_at ? new Date(ghUserData.created_at).getFullYear() : prev.year,
+            commits: prev.commits,
+          };
+          localStorage.setItem(CACHE_KEY_GH, JSON.stringify({ stats: newGh, timestamp: now }));
+          return newGh;
+        });
+
         setLastRefreshed(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
       } catch (error) {
         console.error("Stats error", error);
@@ -164,7 +180,16 @@ export default function LeetCodeSection() {
     fetchData();
     const handleRefresh = () => fetchData(true);
     window.addEventListener('update-stats', handleRefresh);
-    return () => window.removeEventListener('update-stats', handleRefresh);
+
+    // Auto-sync stats every 5 minutes in the background
+    const syncInterval = setInterval(() => {
+      fetchData(true);
+    }, 5 * 60 * 1000);
+
+    return () => {
+      window.removeEventListener('update-stats', handleRefresh);
+      clearInterval(syncInterval);
+    };
   }, []);
 
   const profileLink = activeTab === "leetcode"
@@ -296,14 +321,12 @@ export default function LeetCodeSection() {
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">
           <a href={profileLink} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 px-5 sm:px-6 py-2.5 rounded-full bg-white/[0.03] border border-white/10 hover:border-primary/40 transition-all w-full sm:w-auto justify-center">
             <span className="text-[9px] sm:text-[10px] font-bold font-mono-display text-muted-foreground group-hover:text-primary uppercase tracking-[0.15em] sm:tracking-[0.2em]">View Full Profile</span>
-            <Github size={14} className="sm:size-4 text-muted-foreground group-hover:text-primary" />
+            {activeTab === "leetcode" ? (
+              <Code2 size={14} className="sm:size-4 text-muted-foreground group-hover:text-primary" />
+            ) : (
+              <Github size={14} className="sm:size-4 text-muted-foreground group-hover:text-primary" />
+            )}
           </a>
-          <button onClick={() => window.dispatchEvent(new CustomEvent('update-stats'))} disabled={loading} className="group flex items-center gap-3 px-5 sm:px-6 py-2.5 rounded-full bg-white/[0.03] border border-white/10 hover:border-primary/40 transition-all disabled:opacity-50 w-full sm:w-auto justify-center">
-            <motion.div animate={loading ? { rotate: 360 } : {}} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground group-hover:text-primary"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M3 21v-5h5" /></svg>
-            </motion.div>
-            <span className="text-[9px] sm:text-[10px] font-bold font-mono-display text-muted-foreground group-hover:text-primary uppercase tracking-[0.15em] sm:tracking-[0.2em]">Sync Stats</span>
-          </button>
         </div>
         {lastRefreshed && (
           <p className="text-[9px] font-mono-display text-muted-foreground opacity-40 uppercase tracking-[0.3em]">Synchronized: {lastRefreshed}</p>
