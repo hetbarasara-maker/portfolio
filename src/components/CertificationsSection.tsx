@@ -10,9 +10,15 @@ const certs = [
     link: "https://drive.google.com/file/d/1yz0LNNKvNwIHIQ1FPE6-JeD3MI4c7ZII/view?usp=sharing"
   },
   {
+    title: "Introduction to MERN Stack",
+    issuer: "Simplilearn",
+    year: "2026",
+    link: "https://drive.google.com/file/d/1YnsK-m-Zzp0tVNMRYSZOpAgnOHASL6qN/view?usp=sharing"
+  },
+  {
     title: "Generative AI Mastermind",
     issuer: "Outskill",
-    year: "2024",
+    year: "2025",
     link: "https://drive.google.com/file/d/11v6Iyy5sNBXon7yDiG51ZjluP7TniQRZ/view?usp=sharing"
   },
   {
