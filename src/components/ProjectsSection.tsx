@@ -7,6 +7,7 @@ import fintrackImg from "@/assets/fintrack.png";
 import cafeHeavenImg from "@/assets/cafe-heaven.png";
 import mutualFundImg from "@/assets/mutual-fund.png";
 import woodcraftImg from "@/assets/woodcraft.png";
+import carnestImg from "@/assets/carnest.png";
 
 const projects = [
   {
@@ -31,9 +32,9 @@ const projects = [
     title: "CarNest",
     desc: "A premium car interior solutions platform featuring custom-fitted parts, luxury seat covers, and ambient lighting to transform your driving experience.",
     tech: ["React", "Vite", "Tailwind CSS"],
-    image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=600&h=400&fit=crop",
+    image: carnestImg,
     live: "https://car-nest-lovat.vercel.app/",
-    source: "#",
+    source: "https://github.com/hetbarasara-maker/car_nest",
     youtube: "#",
   },
   {
