@@ -13,7 +13,7 @@ const projects = [
   {
     title: "FinTrack",
     desc: "A comprehensive personal finance tracker that helps you manage expenses, track savings, and visualize your financial health with interactive charts.",
-    tech: ["TypeScript", "Next.js", "Tailwind CSS", "Supabase"],
+    tech: ["TypeScript", "React", "Tailwind CSS", "Supabase"],
     image: fintrackImg,
     live: "https://fin-track-ashen.vercel.app/auth/login",
     source: "https://github.com/hetbarasara-maker/FinTrack",
@@ -22,7 +22,7 @@ const projects = [
   {
     title: "Mutual Fund Explorer",
     desc: "A powerful platform for discovering, comparing, and analyzing mutual funds. Features real-time fund performance tracking and systematic investment planning (SIP) insights.",
-    tech: ["React", "Tailwind CSS", "Vercel"],
+    tech: ["Next.js", "Tailwind CSS", "Vercel"],
     image: mutualFundImg,
     live: "https://mutual-fund-kappa.vercel.app/",
     source: "https://github.com/hetbarasara-maker/mutual_fund",

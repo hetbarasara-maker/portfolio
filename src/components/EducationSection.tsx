@@ -4,7 +4,7 @@ import { GraduationCap } from "lucide-react";
 
 const education = [
   {
-    year: "2025 – Present",
+    year: "2025 – 2028",
     title: "B.Tech in Information Technology",
     school: "Rai University x CodingGita",
     desc: "Currently pursuing advanced studies in Information Technology with a focus on practical coding and software development."

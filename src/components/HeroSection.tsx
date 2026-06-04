@@ -101,7 +101,7 @@ export default function HeroSection() {
               <motion.a
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                href="/resume.pdf"
+                href="https://drive.google.com/drive/u/0/folders/1XDs_SZnG5TmUo-JLU_CHZFWo44J3RzoE"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 sm:flex-none px-6 py-3 rounded-lg border border-primary/40 text-primary font-medium text-xs sm:text-sm flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors duration-300"
