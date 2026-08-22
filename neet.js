@@ -1,0 +1,1 @@
+fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://leetcode.com/graphql?query=query { matchedUser(username: \u0022neetcode\u0022) { submitStats { acSubmissionNum { difficulty count } } } }')).then(r=>r.json()).then(j => console.log(JSON.stringify(j)))

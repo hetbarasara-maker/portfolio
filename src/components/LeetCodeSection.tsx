@@ -83,8 +83,8 @@ export default function LeetCodeSection() {
 
   useEffect(() => {
     const fetchData = async (force = false) => {
-      const CACHE_KEY_LC = "portfolio_lc_stats";
-      const CACHE_KEY_GH = "portfolio_gh_stats";
+      const CACHE_KEY_LC = "portfolio_lc_stats_v3";
+      const CACHE_KEY_GH = "portfolio_gh_stats_v3";
       const CACHE_TIME = 5 * 60 * 1000;
 
       const cachedLc = localStorage.getItem(CACHE_KEY_LC);
@@ -106,52 +106,101 @@ export default function LeetCodeSection() {
 
       setLoading(true);
       try {
-        const [lcMainRes, contestRes, calendarRes, ghUserRes, ghReposRes] = await Promise.allSettled([
-          fetch(`https://leetcode-api-faisalshohag.vercel.app/Het_Barasara`),
-          fetch(`https://alfa-leetcode-api.onrender.com/Het_Barasara/contest`),
-          fetch(`https://alfa-leetcode-api.onrender.com/Het_Barasara/calendar`),
+        const lcQuery = `query { matchedUser(username: "Het_Barasara") { submitStats { acSubmissionNum { difficulty count } } profile { ranking } userCalendar { streak submissionCalendar } } userContestRanking(username: "Het_Barasara") { rating } }`;
+        const lcUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://leetcode.com/graphql?query=${lcQuery}`)}`;
+
+        const [ghUserRes, ghReposRes] = await Promise.allSettled([
           fetch(`https://api.github.com/users/hetbarasara-maker`),
           fetch(`https://api.github.com/users/hetbarasara-maker/repos?per_page=100`)
         ]);
 
-        let solvedData: any = null;
-        let contestData: any = null;
-        let calendarData: any = null;
+        let lcData: any = null;
         let ghUserData: any = null;
         let ghReposData: any = null;
 
-        if (lcMainRes.status === 'fulfilled' && lcMainRes.value.ok) solvedData = await lcMainRes.value.json();
-        if (contestRes.status === 'fulfilled' && contestRes.value.ok) contestData = await contestRes.value.json();
-        if (calendarRes.status === 'fulfilled' && calendarRes.value.ok) calendarData = await calendarRes.value.json();
+        // Try primary proxy graphQL approach
+        try {
+          const lcRes = await fetch(lcUrl);
+          if (lcRes.ok) {
+            const json = await lcRes.json();
+            if (json?.data?.matchedUser) lcData = json;
+          }
+        } catch (e) {
+          console.error("Primary LC fetch failed");
+        }
+
+        // Fallback to Alfa LeetCode API if primary fails or is blocked
+        if (!lcData) {
+          try {
+            const fallbackRes = await fetch("https://alfa-leetcode-api.onrender.com/Het_Barasara");
+            if (fallbackRes.ok) {
+              const fallbackData = await fallbackRes.json();
+              lcData = { isAlfa: true, ...fallbackData };
+              const [contestRes, calendarRes] = await Promise.all([
+                fetch("https://alfa-leetcode-api.onrender.com/Het_Barasara/contest").then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch("https://alfa-leetcode-api.onrender.com/Het_Barasara/calendar").then(r => r.ok ? r.json() : null).catch(() => null)
+              ]);
+              lcData.contestData = contestRes;
+              lcData.calendarData = calendarRes;
+            }
+          } catch (e) {
+            console.error("Fallback LC fetch failed");
+          }
+        }
+
         if (ghUserRes.status === 'fulfilled' && ghUserRes.value.ok) ghUserData = await ghUserRes.value.json();
         if (ghReposRes.status === 'fulfilled' && ghReposRes.value.ok) ghReposData = await ghReposRes.value.json();
 
         setLcStats(prev => {
-          const newLc = {
-            solved: solvedData?.totalSolved ?? prev.solved,
-            contestRating: contestData?.contestRating ? Math.round(contestData.contestRating).toLocaleString() : prev.contestRating,
-            easy: solvedData?.easySolved ?? prev.easy,
-            medium: solvedData?.mediumSolved ?? prev.medium,
-            hard: solvedData?.hardSolved ?? prev.hard,
-            streak: calendarData?.streak ?? prev.streak,
-            ranking: solvedData?.ranking ?? prev.ranking,
-          };
-
+          if (!lcData) return prev;
+          let newLc = { ...prev };
           let calObj = null;
-          if (solvedData?.submissionCalendar && typeof solvedData.submissionCalendar === 'object') {
-            calObj = solvedData.submissionCalendar;
-          } else if (calendarData?.submissionCalendar) {
-            try { calObj = JSON.parse(calendarData.submissionCalendar); } catch (e) { }
+
+          if (lcData.isAlfa) {
+            const contest = lcData.contestData;
+            const calendar = lcData.calendarData;
+            newLc = {
+              solved: lcData.totalSolved ?? prev.solved,
+              contestRating: contest?.contestRating ? Math.round(contest.contestRating).toLocaleString() : prev.contestRating,
+              easy: lcData.easySolved ?? prev.easy,
+              medium: lcData.mediumSolved ?? prev.medium,
+              hard: lcData.hardSolved ?? prev.hard,
+              streak: calendar?.streak ?? prev.streak,
+              ranking: lcData.ranking ? lcData.ranking.toLocaleString() : prev.ranking,
+            };
+            if (calendar?.submissionCalendar) {
+              try { calObj = JSON.parse(calendar.submissionCalendar); } catch (e) { }
+            }
+          } else {
+            const user = lcData.data?.matchedUser;
+            if (user) {
+              const contest = lcData.data?.userContestRanking;
+              const subs = user.submitStats?.acSubmissionNum || [];
+              const getCount = (diff: string) => subs.find((s: any) => s.difficulty === diff)?.count || 0;
+
+              newLc = {
+                solved: getCount("All") || prev.solved,
+                contestRating: contest?.rating ? Math.round(contest.rating).toLocaleString() : prev.contestRating,
+                easy: getCount("Easy") || prev.easy,
+                medium: getCount("Medium") || prev.medium,
+                hard: getCount("Hard") || prev.hard,
+                streak: user.userCalendar?.streak ?? prev.streak,
+                ranking: user.profile?.ranking ? user.profile.ranking.toLocaleString() : prev.ranking,
+              };
+              if (user.userCalendar?.submissionCalendar) {
+                try { calObj = JSON.parse(user.userCalendar.submissionCalendar); } catch (e) { }
+              }
+            }
           }
 
-          if (calObj) {
-            setLcCalendar(calObj);
-          }
+          if (calObj) setLcCalendar(calObj);
+
           localStorage.setItem(CACHE_KEY_LC, JSON.stringify({ stats: newLc, calendar: calObj || {}, timestamp: now }));
           return newLc;
         });
 
         setGhStats(prev => {
+          if (!ghUserData) return prev;
           const totalStars = Array.isArray(ghReposData)
             ? ghReposData.reduce((acc: number, repo: any) => acc + (repo.stargazers_count || 0), 0)
             : Number(prev.stars);
